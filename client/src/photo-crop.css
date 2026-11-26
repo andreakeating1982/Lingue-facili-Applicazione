@@ -1,0 +1,84 @@
+/* Ritaglio foto: foto/testata scorrono, pagina sotto bloccata.
+   RUOTA SINISTRA/DESTRA e CHIUDI/RITAGLIA condividono UN riquadro centrato;
+   nessun AZZERA. Compatti su due righe mobile e una riga quando c'è spazio.
+   La misura originale è ripristinata su esplicita richiesta dell'utente. */
+.lf-crop-dialog {
+  overscroll-behavior: none;
+  /* Radix può rimontare il fondo dopo il dialogo tra due foto consecutive. */
+  z-index: 51;
+  /* La larghezza del dialogo (anche nella cornice) guida il layout dei comandi. */
+  container-type: inline-size;
+  /* Lingue Facili usa una radice da 14pt; il widget sorgente usa 16px.
+     Compensare solo nel ritaglio, senza cambiare la scala dell'app. */
+  --spacing: calc(4px * var(--lf-scale, 1));
+  --radius: calc(17.6px * var(--lf-scale, 1));
+  --foreground: oklch(26% .025 55);
+  --border: oklch(88% .008 85);
+  width: calc(100% - 16px * var(--lf-scale, 1));
+  max-width: calc(768px * var(--lf-scale, 1));
+  font-family: "OpenDyslexic", "Cambria Math", Cambria, serif;
+  font-size: calc(18px * var(--lf-scale, 1));
+  letter-spacing: 0.012em;
+}
+/* Nel widget originale il titolo è sempre centrato. */
+.lf-crop-dialog [data-slot="dialog-header"],
+.lf-crop-dialog [data-slot="dialog-title"] {
+  text-align: center;
+}
+.lf-crop-dialog [data-slot="dialog-title"] {
+  font-size: calc(20px * var(--lf-scale, 1));
+  line-height: 1.4;
+}
+.lf-crop-scroll {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable;
+}
+.lf-crop-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 12px max(8px, env(safe-area-inset-bottom));
+}
+.lf-crop-footer > button {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: calc(50% - 4px);
+  min-height: 44px;
+  height: auto;
+  white-space: normal;
+  /* La label può andare a capo senza uscire dal pulsante. */
+  flex-wrap: nowrap;
+  line-height: 1.35;
+  padding: 8px 12px;
+  text-align: center;
+  justify-content: center;
+  /* Eccezione concordata: 14px alla scala 100%, come nella sorgente.
+     A−/A+ continuano ad agire; il bersaglio tattile resta almeno 44px. */
+  font-size: calc(14px * var(--lf-scale, 1));
+  font-family: "OpenDyslexic", "Cambria Math", Cambria, serif !important;
+}
+.lf-crop-label {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+/* Su telefoni stretti con caratteri ingranditi l'icona passa sopra il testo:
+   l'aspetto resta quello delle capsule originali, senza ridurre il font.
+   La soglia in rem cresce con A+, come nel widget; non influenza il dialogo
+   a scala normale, né la geometria del riquadro di selezione. */
+@container (max-width: 16rem) {
+  .lf-crop-footer > button {
+    flex-direction: column;
+    gap: 3px;
+    padding-inline: 4px;
+  }
+}
+
+/* Mouse E touch: trascinamento diretto da tutta l'area selezionata.
+   Nessuna icona necessaria. Lo scroll rimane sui margini e fuori dal crop. */
+.lf-crop-move {
+  pointer-events: auto;
+  touch-action: none;
+}

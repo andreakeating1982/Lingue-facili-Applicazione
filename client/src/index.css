@@ -1,0 +1,694 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+/* Cropper 8731 del Widget metacognitivo: layout accessibile circoscritto al dialogo. */
+@import "./photo-crop.css";
+
+/* ----------------------------------------------------------------
+   OpenDyslexic: font ad alta leggibilità usato in TUTTA l'app.
+   File auto-ospitati in /fonts (niente CDN).
+   ---------------------------------------------------------------- */
+@font-face {
+  font-family: "OpenDyslexic";
+  src: url("/fonts/OpenDyslexic-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "OpenDyslexic";
+  src: url("/fonts/OpenDyslexic-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "OpenDyslexic";
+  src: url("/fonts/OpenDyslexic-Italic.otf") format("opentype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "OpenDyslexic";
+  src: url("/fonts/OpenDyslexic-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  /* Le taglie piccole seguono la radice, mantenuta ad almeno 14pt anche con A−. */
+  --text-xs: 1rem;
+  --text-sm: 1rem;
+  --text-base: 1rem;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  /* Palette allineata a Widget-metacognitivo-per-il-calcolo-di-equazioni:
+     carta avorio #F8F1E4, card #FAF8F5, inchiostro #2E2118, terracotta #8B3A1A. */
+  --radius: 0.75rem;
+  --background: #F8F1E4;
+  --foreground: #2E2118;
+  --card: #FAF8F5;
+  --card-foreground: #2E2118;
+  --popover: #FAF8F5;
+  --popover-foreground: #2E2118;
+  --primary: #8B3A1A;
+  --primary-foreground: #FFFFFF;
+  --secondary: #EEE2D5;
+  --secondary-foreground: #5A3826;
+  --muted: #F0EAE0;
+  --muted-foreground: #66564C;
+  --accent: #F2E7DE;
+  --accent-foreground: #8B3A1A;
+  --destructive: #B71C1C;
+  --destructive-foreground: #FFFFFF;
+  --border: #E5E0D8;
+  --input: #D6CEC4;
+  --ring: #8B3A1A;
+  --chart-1: #3949ab;
+  --chart-2: #00695c;
+  --chart-3: #b71c1c;
+  --chart-4: #00796b;
+  --chart-5: #FFB300;
+  --lf-scale: 1;
+  --lf-lh: 1.65;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: "OpenDyslexic", Cambria, Georgia, serif;
+    font-size: max(14pt, 1rem);
+    line-height: var(--lf-lh, 1.65);
+    letter-spacing: 0.012em;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [type="button"]:not(:disabled),
+  [type="submit"]:not(:disabled),
+  a[href],
+  select:not(:disabled),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled) {
+    @apply cursor-pointer;
+  }
+
+  /* Focus ad alta visibilità come nel Widget metacognitivo per le equazioni */
+  :focus-visible {
+    outline: 3px solid #B71C1C;
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: #8B3A1A;
+    color: #FFFFFF;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@layer components {
+  .font-display {
+    font-family: "OpenDyslexic", Cambria, Georgia, serif;
+  }
+
+  /* Trama carta leggera delle pagine operative del Widget equazioni */
+  .paper-grain {
+    background-image: radial-gradient(#722d8d0a 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  /* Card principale come .input-panel / .clone-welcome-card / .clone-feedback-card */
+  .card-paper {
+    background: #FAF8F5;
+    border: 1px solid #E5E0D8;
+    border-radius: 16px;
+    box-shadow: 0 5px 18px rgba(43, 36, 33, 0.05);
+  }
+
+  /* Card dell'esercizio attivo come .clone-step-card (#FDFBF8, raggio 14px) */
+  .lf-step-card {
+    background: #FDFBF8;
+    border: 1px solid #E5E0D8;
+    border-radius: 14px;
+  }
+
+  /* Chip delle parole (riordino / abbinamento) coordinate a .secondary-btn / .clone-choice */
+  .chip-word {
+    display: inline-block;
+    border-radius: 12px;
+    padding: 4px 14px 5px;
+    font-weight: 700;
+    font-size: 1.15rem;
+    line-height: 1.35;
+    border: 2px solid #C9AD9A;
+    background: #F2E7DE;
+    color: #2E2118;
+    transition: transform 0.14s ease, box-shadow 0.14s ease, filter 0.14s ease;
+    cursor: grab;
+    user-select: none;
+    box-shadow: 0 1px 3px rgba(43, 36, 33, 0.1);
+  }
+  .chip-word:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(43, 36, 33, 0.14);
+    filter: brightness(0.98);
+  }
+  .chip-word:active {
+    cursor: grabbing;
+  }
+  .chip-word:focus-visible {
+    outline: 3px solid #B71C1C;
+    outline-offset: 2px;
+  }
+  .chip-blu { background: #E8EAF6; border-color: #3949ab; color: #283593; }
+  .chip-pur { background: #ece0f5; border-color: #00796b; color: #004d40; }
+  .chip-ver { background: #E2F3EF; border-color: #00695c; color: #004d40; }
+  .chip-gia { background: #fff3b0; border-color: #FFB300; color: #8a6400; }
+  .chip-gra { background: #F2E7DE; border-color: #C9AD9A; color: #2E2118; }
+  .chip-coral { background: #FDF0EE; border-color: #b71c1c; color: #a51818; }
+
+  .legend-dot {
+    display: inline-block;
+    width: 1.05rem;
+    height: 1.05rem;
+    border-radius: 0.35rem;
+    border: 2px solid #2E2118;
+  }
+
+  /* Parola evidenziata (vero/falso) */
+  .hl-word {
+    background: #fff3b0;
+    font-weight: 700;
+    border-bottom: 3px solid #FFB300;
+    padding: 0 3px;
+    border-radius: 4px;
+  }
+
+  @keyframes chip-in {
+    from { opacity: 0; transform: translateY(8px) scale(0.94); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .chip-in {
+    animation: chip-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  @keyframes shake-x {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-7px); }
+    40% { transform: translateX(7px); }
+    60% { transform: translateX(-5px); }
+    80% { transform: translateX(5px); }
+  }
+  .shake {
+    animation: shake-x 0.45s ease both;
+  }
+  @keyframes pop-in {
+    0% { opacity: 0; transform: scale(0.7); }
+    70% { opacity: 1; transform: scale(1.06); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  .pop-in {
+    animation: pop-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* Barra di preparazione integrata nello stile .clone-build-status del Widget equazioni */
+  .lf-progress-card {
+    border: 2px solid color-mix(in oklab, #8B3A1A 40%, transparent);
+    border-radius: 12px;
+    background: color-mix(in oklab, #8B3A1A 5%, #FAF8F5);
+    color: #8B3A1A;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.14);
+  }
+  .lf-progress-track {
+    height: 8px;
+    border-radius: 999px;
+    background: color-mix(in oklab, #8B3A1A 20%, transparent);
+    overflow: hidden;
+  }
+  .lf-progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: #8B3A1A;
+    transition: width 0.4s ease;
+  }
+  @keyframes lf-progress-slide {
+    from { transform: translateX(0); }
+    to { transform: translateX(185%); }
+  }
+  .lf-progress-indeterminate {
+    width: 35%;
+    height: 100%;
+    border-radius: 999px;
+    background: #8B3A1A;
+    animation: lf-progress-slide 1.7s ease-in-out infinite alternate;
+  }
+}
+
+/* Form, notifiche e componenti ereditati usano sempre il carattere locale. */
+button, input, textarea, select, option, [data-sonner-toaster] {
+  font-family: "OpenDyslexic", Cambria, Georgia, serif !important;
+}
+
+/* Sonner imposta 13px per le notifiche: anche questi messaggi devono
+   seguire i 14pt minimi e l'ingrandimento scelto dall'utente. */
+[data-sonner-toast] {
+  font-size: max(14pt, 1rem) !important;
+  line-height: var(--lf-lh, 1.65) !important;
+}
+[data-sonner-toast] :is([data-title], [data-description], [data-button], [data-cancel]) {
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+
+/* Radio native con un bersaglio tattile reale da 44px: il cerchio visivo
+   rimane compatto e usa il primario terracotta #8B3A1A del Widget equazioni. */
+.lf-choice-radio {
+  appearance: none;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  border: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffffff 0 8px, #8B3A1A 8px 10px, transparent 10px);
+}
+.lf-choice-radio:checked {
+  background: radial-gradient(circle, #8B3A1A 0 5px, #ffffff 5px 8px, #8B3A1A 8px 10px, transparent 10px);
+}
+.lf-choice-radio:disabled { opacity: 0.55; cursor: not-allowed; }
+
+/* Due colonne come le altre app del blog; a zoom elevato il modulo diventa
+   una colonna quando serve, senza tagliare data e campi su telefoni stretti. */
+.lf-student-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(105px * var(--lf-scale, 1))), 1fr));
+}
+.lf-welcome input::placeholder {
+  font-size: calc(12px * var(--lf-scale, 1));
+}
+
+/* Barra standard del Widget metacognitivo pubblicato: le utility rem della
+   barra usano la sua base 16px, NON la radice da 14pt del percorso.
+   I pulsanti della barra e della finestra di ritaglio restano identici alla
+   produzione pubblicata (eccezione esplicita dell'utente). */
+.lf-standard-toolbar,
+.lf-crop-dialog {
+  --ring: #805B46;
+}
+.lf-standard-toolbar button {
+  font-family: "OpenDyslexic", sans-serif !important;
+}
+.lf-crop-dialog button:not(.lf-crop-footer > button) {
+  font-family: "OpenDyslexic", sans-serif !important;
+  color: #2E2018;
+}
+.lf-standard-toolbar {
+  --toolbar-unit: calc(4px * var(--lf-scale, 1));
+  margin-top: calc(2 * var(--toolbar-unit));
+  margin-bottom: var(--toolbar-unit);
+  max-width: calc(100vw - 4 * var(--toolbar-unit));
+  gap: calc(1.5 * var(--toolbar-unit));
+  border-radius: calc(4 * var(--toolbar-unit));
+  padding: calc(2 * var(--toolbar-unit)) calc(2.5 * var(--toolbar-unit));
+}
+.lf-standard-toolbar [role="group"] {
+  gap: var(--toolbar-unit);
+  border-radius: calc(2 * var(--toolbar-unit));
+  padding: var(--toolbar-unit) calc(2 * var(--toolbar-unit));
+}
+.lf-standard-toolbar [role="group"] > span:first-child { gap: var(--toolbar-unit); }
+.lf-standard-toolbar [role="group"] > span:first-child svg {
+  width: calc(3 * var(--toolbar-unit));
+  height: calc(3 * var(--toolbar-unit));
+}
+.lf-standard-toolbar [aria-live="polite"] { min-width: calc(10.4 * var(--toolbar-unit)); }
+.lf-standard-toolbar .lf-toolbar-button {
+  height: calc(6 * var(--toolbar-unit));
+  min-width: calc(6 * var(--toolbar-unit));
+  padding-inline: var(--toolbar-unit);
+  border-radius: calc(1.5 * var(--toolbar-unit));
+  text-transform: uppercase;
+}
+
+@media (pointer: coarse) {
+  .lf-toolbar-button { position: relative; touch-action: manipulation; }
+  .lf-toolbar-button::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* Comandi foto e audio impilati, centrati e della stessa larghezza. */
+.lf-equal-actions {
+  width: min(100%, 390px, max(78%, calc(148px * var(--lf-scale, 1))));
+  margin-inline: auto;
+}
+.lf-equal-actions > button,
+.lf-equal-actions > label {
+  flex: 0 0 auto;
+  width: 100%;
+  min-width: 0;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: var(--lf-lh, 1.65);
+}
+.lf-equal-actions > :is(button, label) > span {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+  word-break: normal;
+}
+.lf-equal-actions > :is(button, label) > svg { flex-shrink: 0; }
+
+/* Anche le sole scritte dei PDF seguono l'interlinea accessibile scelta. */
+.lf-pdf-action { line-height: var(--lf-lh, 1.65); }
+
+/* Testi molto lunghi restano visibili anche con caratteri ingranditi. */
+.lf-flow-page { overflow-wrap: anywhere; }
+
+/* Titoli e controlli del percorso didattico: centrati e maiuscoli. */
+.lf-flow-page :is(h1, h2, h3, h4, h5, h6) {
+  text-align: center;
+  text-transform: uppercase;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+.lf-flow-page button { text-align: center; justify-content: center; }
+
+/* ------------------------------------------------------------------
+   Righello di lettura e Alto Contrasto identici al Widget equazioni
+   ------------------------------------------------------------------ */
+.lf-ruler-band {
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 40vh;
+  height: 2.8rem;
+  min-height: 34px;
+  background: #ffffad50;
+  border-top: 2px solid #7d391c;
+  border-bottom: 2px solid #7d391c;
+  pointer-events: none;
+  z-index: 110;
+}
+html.lf-ruler .lf-ruler-band {
+  display: block;
+}
+html.lf-hc.lf-ruler .lf-ruler-band {
+  border-top-color: #ffdf80;
+  border-bottom-color: #ffdf80;
+  background: rgba(255, 223, 128, 0.28);
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 62, 0.2);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 62, 0.35);
+}
+
+/* ------------------------------------------------------------------
+   EMBED (iframe a altezza automatica) + PRIMA PAGINA autonoma
+   ------------------------------------------------------------------ */
+html.lf-embedded .min-h-screen,
+html.lf-embedded .min-h-dvh {
+  min-height: 0 !important;
+}
+html.lf-embedded:not(.lf-inner-scroll) {
+  overflow-y: hidden !important;
+}
+html.lf-embedded body {
+  min-height: 0 !important;
+}
+html.lf-embedded .lf-welcome {
+  min-height: 0 !important;
+  justify-content: flex-start;
+  padding-top: 20px;
+  padding-bottom: 24px;
+}
+html.lf-embedded .lf-welcome > div:first-child {
+  padding-top: 0 !important;
+}
+
+/* Prima pagina: scala e proporzioni compatte del Widget equazioni; le altre
+   pagine mantengono il minimo 14pt e la finestra di ritaglio resta invariata. */
+html.lf-home { font-size: calc(16px * var(--lf-scale, 1)) !important; }
+html.lf-home body { font-size: calc(16px * var(--lf-scale, 1)); }
+html.lf-home .lf-standard-toolbar .lf-toolbar-button { text-transform: none; }
+html.lf-welcome-top body {
+  background-color: #ffffff;
+}
+html.lf-welcome-top .lf-welcome {
+  position: relative;
+}
+html.lf-welcome-top .lf-welcome::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 48px;
+  background: linear-gradient(to bottom, rgba(248, 241, 228, 0), #ffffff);
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------
+   Sistema pulsanti e scelte allineato a Widget-metacognitivo-equazioni
+   (barra accessibilità e finestra di ritaglio restano intatte).
+   ------------------------------------------------------------------ */
+:is(button, [role="button"], label:has(> input[type="file"])):not(.lf-standard-toolbar *, .lf-crop-dialog *, .lf-choice-option, .lf-reorder-chip, .lf-new-exercise, .lf-enter-btn, .lf-recording-btn) {
+  background-color: #8B3A1A;
+  color: #ffffff;
+  border-color: #8B3A1A;
+  border-radius: 12px;
+  font-weight: 700;
+}
+:is(button, [role="button"], label:has(> input[type="file"])):not(.lf-standard-toolbar *, .lf-crop-dialog *, .lf-choice-option, .lf-reorder-chip, .lf-new-exercise) svg {
+  color: inherit;
+}
+
+/* Scelte e tessere di riordino più chiare dei comandi primari (#8B3A1A),
+   come .secondary-btn / .clone-choice nel Widget equazioni. */
+.lf-choice-option, .lf-reorder-chip {
+  background-color: #F2E7DE !important;
+  color: #2E2118 !important;
+  border-color: #C9AD9A !important;
+  border-radius: 12px !important;
+}
+.lf-choice-option[data-answer-status="correct"] {
+  background-color: #E8F5E9 !important;
+  color: #1B5E20 !important;
+  border-color: #258142 !important;
+}
+.lf-choice-option[data-answer-status="wrong"] {
+  background-color: #FBE7E1 !important;
+  color: #7A1C1C !important;
+  border-color: #B71C1C !important;
+}
+
+:is(button, [role="button"], label:has(> input[type="file"]), .lf-choice-option, .lf-reorder-chip, .lf-new-exercise):not(.lf-standard-toolbar *, .lf-crop-dialog *):focus-visible,
+label:has(> input[type="file"]:focus-visible):not(.lf-standard-toolbar *, .lf-crop-dialog *) {
+  outline: 3px solid #B71C1C !important;
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------------
+   Alto Contrasto (lf-hc) identico al Widget equazioni (esclusi toolbar e crop)
+   ------------------------------------------------------------------ */
+html.lf-hc body,
+html.lf-hc .lf-welcome,
+html.lf-hc .lf-flow-page {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  background-image: none !important;
+}
+html.lf-hc.lf-welcome-top .lf-welcome::after {
+  display: none;
+}
+html.lf-hc :is(.lf-welcome-card, .card-paper, .lf-step-card, .lf-alert-dialog, .lf-question-box, .lf-reorder-bank, .lf-progress-card) {
+  background-color: #111111 !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+  box-shadow: none !important;
+}
+html.lf-hc .lf-translation-panel {
+  background-color: #111111 !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+  border-left: 4px solid #ffdb7b !important;
+}
+html.lf-hc .lf-option-translation {
+  background-color: #1c1c1c !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+html.lf-hc :is(.lf-welcome-card h1, .lf-flow-page h1, .lf-flow-page h2, .lf-flow-page h3, .lf-flow-page legend, .lf-description-status, .lf-welcome-sub strong, .lf-alert-dialog h2) {
+  color: #ffdb7b !important;
+}
+html.lf-hc :is(.lf-welcome p, .lf-welcome summary, .lf-flow-page p, .lf-flow-page li, .lf-alert-dialog p):not(.lf-standard-toolbar *, .lf-crop-dialog *, button *, [role="button"] *, .lf-feedback-banner *) {
+  color: #ffffff !important;
+}
+html.lf-hc .lf-flow-page span:not(.lf-standard-toolbar *, .lf-crop-dialog *, button *, [role="button"] *, label:has(> input[type="file"]) *, .lf-feedback-banner *) {
+  color: inherit;
+}
+html.lf-hc :is(.lf-welcome strong, .lf-welcome b, .lf-flow-page strong, .lf-flow-page b, .lf-option-translation > span:first-child):not(.lf-standard-toolbar *, .lf-crop-dialog *, button *, [role="button"] *) {
+  color: #ffdb7b !important;
+}
+html.lf-hc .lf-student-header > span:first-child,
+html.lf-hc .lf-party-badge {
+  background-color: #2d2d2d !important;
+  color: #ffdb7b !important;
+  border: 1px solid #ffdb7b !important;
+}
+html.lf-hc .lf-party-badge svg {
+  color: #ffdb7b !important;
+}
+html.lf-hc .lf-student-header [data-dot-state="done"] {
+  background-color: #ffdf80 !important;
+}
+html.lf-hc .lf-student-header [data-dot-state="current"] {
+  background-color: #2d2d2d !important;
+  border: 2px solid #ffdf80 !important;
+}
+html.lf-hc .lf-student-header [data-dot-state="todo"] {
+  background-color: #3a3a3a !important;
+}
+html.lf-hc .lf-feedback-banner[data-feedback="ok"] {
+  background-color: #102a16 !important;
+  color: #a9f6b8 !important;
+  border-color: #a9f6b8 !important;
+}
+html.lf-hc .lf-feedback-banner[data-feedback="ko"] {
+  background-color: #2e1111 !important;
+  color: #ff9d9d !important;
+  border-color: #ff9d9d !important;
+}
+html.lf-hc :is(.lf-welcome-sub, .lf-privacy p, #exercise-word-count, #teacher-word-count) {
+  color: #ffffff !important;
+}
+html.lf-hc :is(.lf-welcome input, .lf-flow-page textarea, .lf-flow-page input:not([type="radio"]):not([type="file"])) {
+  background-color: #111111 !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+html.lf-hc :is(.lf-welcome input, .lf-flow-page textarea)::placeholder {
+  color: #d4d4d4 !important;
+}
+html.lf-hc :is(button, [role="button"], label:has(> input[type="file"])):not(.lf-standard-toolbar *, .lf-crop-dialog *, .lf-choice-option, .lf-reorder-chip, .lf-new-exercise) {
+  background-color: #ffdf80 !important;
+  color: #000000 !important;
+  border-color: #ffdf80 !important;
+}
+html.lf-hc .lf-radio-card {
+  background-color: #111111 !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+html.lf-hc .lf-radio-card span {
+  color: #ffffff !important;
+}
+html.lf-hc .lf-radio-card-selected {
+  background-color: #2d2d2d !important;
+  border-color: #ffdb7b !important;
+}
+html.lf-hc .lf-radio-card-selected span:first-child {
+  color: #ffdb7b !important;
+}
+html.lf-hc .lf-choice-radio {
+  background: radial-gradient(circle, #111111 0 8px, #ffdf80 8px 10px, transparent 10px);
+}
+html.lf-hc .lf-choice-radio:checked {
+  background: radial-gradient(circle, #ffdf80 0 5px, #111111 5px 8px, #ffdf80 8px 10px, transparent 10px);
+}
+html.lf-hc :is(.lf-choice-option, .lf-reorder-chip) {
+  background-color: #111111 !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+html.lf-hc .lf-choice-option[data-answer-status="correct"] {
+  background-color: #102a16 !important;
+  color: #a9f6b8 !important;
+  border-color: #a9f6b8 !important;
+}
+html.lf-hc .lf-choice-option[data-answer-status="wrong"] {
+  background-color: #2e1111 !important;
+  color: #ff9d9d !important;
+  border-color: #ff9d9d !important;
+}
+html.lf-hc .lf-new-exercise {
+  background-color: transparent !important;
+  color: #ffdb7b !important;
+}
+html.lf-hc :is(button, [role="button"], label:has(> input[type="file"]), .lf-choice-option, .lf-reorder-chip, .lf-new-exercise, input, textarea):not(.lf-standard-toolbar *, .lf-crop-dialog *):focus-visible {
+  outline: 3px solid #ffdf80 !important;
+}

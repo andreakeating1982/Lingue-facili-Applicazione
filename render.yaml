@@ -1,0 +1,57 @@
+# =============================================================================
+# render.yaml — Render Blueprint di «Lingue Facili» (infrastruttura come codice)
+# =============================================================================
+# Come usarlo:
+#   1. Carica questo progetto su una repository GitHub (vedi RENDER.md).
+#   2. Vai su https://dashboard.render.com → New → Blueprint.
+#   3. Connetti la repository: Render legge questo file e crea TUTTO:
+#        - un database PostgreSQL gratuito
+#        - il Web Service Node con l'app
+#        - DATABASE_URL collegato automaticamente + BETTER_AUTH_SECRET generato
+#
+# ATTENZIONE: i piani free di questo esempio sono solo per collaudo, NON per
+# dati scolastici reali: il database free ha una scadenza e può essere eliminato.
+# Verifica https://render.com/docs/free e predisponi database persistente e backup.
+# DOPO il primo deploy: crea lo schema SOLO su un DB vuoto (RENDER.md, passo 4).
+#
+# EASY_PEASY_API_KEY: necessaria per generare nuovi esercizi con l'IA,
+# leggere foto e trascrivere le istruzioni vocali.
+
+databases:
+  - name: lingue-facili-db
+    databaseName: linguefacilidb
+    plan: free
+    region: frankfurt
+
+services:
+  - type: web
+    name: lingue-facili
+    runtime: node
+    plan: free
+    region: frankfurt
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm build
+    startCommand: pnpm start
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      # Versione di Node.js richiesta dal progetto
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_ENV
+        value: production
+      # Render genera automaticamente un segreto sicuro per Better Auth
+      - key: BETTER_AUTH_SECRET
+        generateValue: true
+      # Collegamento automatico al database PostgreSQL creato qui sopra
+      - key: DATABASE_URL
+        fromDatabase:
+          name: lingue-facili-db
+          property: connectionString
+      # Origini attendibili per CORS/cookie: dopo il primo deploy imposta il
+      # tuo dominio Render, es. https://lingue-facili.onrender.com
+      - key: TRUSTED_ORIGINS
+        sync: false
+      # Necessaria per generare gli esercizi, leggere foto e trascrivere la voce.
+      # Impostala nel pannello Render: non committare mai la chiave.
+      - key: EASY_PEASY_API_KEY
+        sync: false

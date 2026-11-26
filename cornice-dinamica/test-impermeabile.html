@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test impermeabilità — 2 cornici Lingue Facili + cornice estranea</title>
+<style>
+  /* Simula lo sfondo di un blog con più embed */
+  body {
+    background: #ffffff;
+    font-family: Georgia, 'Times New Roman', serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
+  .blog-header {
+    background: #2e2018;
+    color: #f8f1e4;
+    padding: 14px 20px;
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    letter-spacing: 1px;
+  }
+  .post {
+    max-width: 900px;
+    margin: 24px auto;
+    padding: 0 16px;
+  }
+  .post h1 { font-size: 24px; margin-bottom: 8px; }
+  .post h2 { font-size: 18px; margin-top: 28px; }
+  .post p { font-size: 15px; line-height: 1.6; margin-bottom: 16px; }
+  .istruzioni {
+    background: #fff8e1;
+    border: 1px solid #e6d9a8;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+  .istruzioni ol { margin: 8px 0 0 20px; padding: 0; }
+  .istruzioni li { margin-bottom: 6px; }
+  .rubrica-ladro {
+    background: #fdecea;
+    border: 2px dashed #c0392b;
+    border-radius: 8px;
+    padding: 12px;
+    margin: 16px 0 24px;
+    font-size: 13px;
+  }
+  .rubrica-ladro strong { color: #c0392b; }
+  #ladroIframe {
+    border: 2px solid #c0392b;
+    display: block;
+    height: 220px;
+    width: 100%;
+    border-radius: 6px;
+    background: #fff;
+  }
+</style>
+</head>
+<body>
+  <div class="blog-header">🧪 Test impermeabilità cornici</div>
+  <div class="post">
+    <h1>Due cornici Lingue Facili + una cornice «ladra»</h1>
+    <div class="istruzioni">
+      <strong>Cosa verificare (tutto deve essere VERO):</strong>
+      <ol>
+        <li><strong>Cornice 1</strong> e <strong>Cornice 2</strong> mostrano ENTRAMBE «Lingue Facili» e si caricano indipendentemente (nessuna mostra un'app al posto dell'altra).</li>
+        <li>Entrambe le cornici si restringono al contenuto reale (prima pagina compatta, nessun grande vuoto sotto la card).</li>
+        <li>Il pulsante <em>Schermo intero</em> della Cornice 1 apre SOLO la Cornice 1 (non la 2).</li>
+        <li>Il pulsante <em>Ricarica</em> della Cornice 2 ricarica SOLO la Cornice 2.</li>
+        <li>La <strong>cornice ladra</strong> (riquadro rosso) NON riesce a: cambiare l'altezza delle due cornici, far comparire il suo stato «online» nelle cornici buone, né indurle a caricare l'app estranea.</li>
+      </ol>
+    </div>
+
+    <!-- ══════════ CORNICE 1 ══════════ -->
+    <h2>① Cornice Lingue Facili (prima istanza)</h2>
+    <!-- CORNICE-INIZIO-1 -->
+    <!-- ⬇️ INCOLLA QUI il contenuto di embed-lingue-facili-dedicata.html (istanza 1) ⬇️ -->
+    <!-- ⬆️ FINE istanza 1 ⬆️ -->
+    <!-- CORNICE-FINE-1 -->
+
+    <!-- ══════════ CORNICE LADRA (estranea: app di un'altra famiglia) ══════════ -->
+    <div class="rubrica-ladro">
+      <strong>🍖 CORNICE LADRA</strong> — simula una vecchia cornice v2 con id fissi che:
+      1) carica un'APP ESTRANEA nella sua iframe;
+      2) prova ad agganciare gli id fissi delle cornici buone (<code>efIframe</code>, <code>efStato</code>…);
+      3) posta messaggi <code>labvisivo:height</code> FALSI (altezze assurde 12000 px e 50 px) da <code>window</code> e non dal suo iframe.
+      Le cornici buone devono IGNORARE tutto questo (filtro <code>e.source</code> + token + id rinominati con token).
+      <iframe id="ladroIframe" src="https://latino-facile-app-2.easy-peasy.site/" title="App estranea nella cornice ladra"></iframe>
+    </div>
+
+    <!-- ══════════ CORNICE 2 ══════════ -->
+    <h2>② Cornice Lingue Facili (seconda istanza)</h2>
+    <!-- CORNICE-INIZIO-2 -->
+    <!-- ⬇️ INCOLLA QUI il contenuto di embed-lingue-facili-dedicata.html (istanza 2) ⬇️ -->
+    <!-- ⬆️ FINE istanza 2 ⬆️ -->
+    <!-- CORNICE-FINE-2 -->
+
+    <script>
+      /* ---------- 🎭 SCRIPT DEL LADRO (deve restare INUTILE) ---------- */
+      (function () {
+        'use strict';
+
+        /* 1) Prova ad agganciare gli id "storici" delle cornici buone:
+              con la v3 questi id NON esistono più (sono rinominati con
+              un token casuale, es. efIframe-ef5ebjz6da) → tutto null. */
+        setTimeout(function () {
+          var prendi = ['lfIframe', 'lfCornice', 'efIframe', 'efCornice', 'efStato', 'francaisFacileIframe', 'efEmbed'];
+          var trovati = prendi.filter(function (id) { return document.getElementById(id); });
+          var box = document.querySelector('.rubrica-ladro strong');
+          if (box) {
+            box.setAttribute('data-risultato', trovati.length ? '⚠️ AGGANCIO RIUSCITO: ' + trovati.join(',') : '✓ aggancio fallito: nessun id fisso trovato');
+          }
+        }, 1500);
+
+        /* 2) Posta altezze FALSE in broadcast (source = window, NON un
+              contentWindow di nessuna cornice): il filtro e.source delle
+              cornici v3 deve scartarle tutte.                     */
+        var falseAltezze = [12000, 50, 12000, 50];
+        var i = 0;
+        setInterval(function () {
+          try {
+            window.postMessage({ type: 'labvisivo:height', height: falseAltezze[i % falseAltezze.length] }, '*');
+            i++;
+          } catch (err) { /* niente */ }
+        }, 1200);
+
+        /* 3) Prova anche a pingare la pagina intera: le app buone
+              rispondono solo al PROPRIO parent (il ladro non è parent). */
+        setInterval(function () {
+          try { window.postMessage({ type: 'labvisivo:ping' }, '*'); } catch (err) { /* niente */ }
+        }, 2000);
+      })();
+    </script>
+  </div>
+</body>
+</html>

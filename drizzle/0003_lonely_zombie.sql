@@ -1,0 +1,1 @@
+ALTER TABLE "exercises" ADD COLUMN "lang" text DEFAULT 'en' NOT NULL;
